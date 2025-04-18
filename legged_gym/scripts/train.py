@@ -14,7 +14,7 @@ def train(args):
     print("Training")
     logdir = ZzsExperimentLogger.generate_logdir(args.task, datetime.now().strftime('%b%d_%H-%M'))
     exp_msg = {}
-    env, env_cfg = task_registry.make_env(name=args.task, args=args)
+    env, env_cfg = task_registry.make_env(name=args.task, args=args, isTrain=True)
     ppo_runner, train_cfg = task_registry.make_alg_runner(env=env, name=args.task, args=args)
     exp_msg["env_cfg"] = class_to_dict(env_cfg)
     exp_msg["train_cfg"] = class_to_dict(train_cfg)

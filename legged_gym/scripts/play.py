@@ -29,7 +29,7 @@ def play(args):
     env_cfg.env.test = True
 
     # prepare environment
-    env, _ = task_registry.make_env(name=args.task, args=args, env_cfg=env_cfg)
+    env, _ = task_registry.make_env(name=args.task, args=args, env_cfg=env_cfg, isTrain=False)
     obs = env.get_observations()
     # load policy
     train_cfg.runner.resume = True
