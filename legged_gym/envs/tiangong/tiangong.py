@@ -17,6 +17,29 @@ class Tiangong(LeggedRobot):
         super().__init__(cfg, sim_params, physics_engine, sim_device, headless)
         self.isTrain = isTrain
 
+    def compute_observations(self):
+        """ Computes observations
+        """
+        self.obs_buf = torch.cat((self.base_ang_vel * self.obs_scales.ang_vel,
+                                  self.projected_gravity,
+                                  self.commands[:, :3] * self.commands_scale,
+                                  (self.dof_pos - self.default_dof_pos) * self.obs_scales.dof_pos,
+                                  self.dof_vel * self.obs_scales.dof_vel,
+                                  self.actions
+                                  ), dim=-1)
+
+        self.privileged_obs_buf = torch.cat((self.base_lin_vel * self.obs_scales.lin_vel,
+                                             self.base_ang_vel * self.obs_scales.ang_vel,
+                                             self.projected_gravity,
+                                             self.commands[:, :3] * self.commands_scale,
+                                             (self.dof_pos - self.default_dof_pos) * self.obs_scales.dof_pos,
+                                             self.dof_vel * self.obs_scales.dof_vel,
+                                             self.actions
+                                             ), dim=-1)
+        # add noise if needed
+        if self.add_noise:
+            self.obs_buf += (2 * torch.rand_like(self.obs_buf) - 1) * self.noise_scale_vec
+
     def _init_buffers(self):
         super()._init_buffers()
         rigid_state = self.gym.acquire_rigid_body_state_tensor(self.sim)
@@ -53,7 +76,7 @@ class Tiangong(LeggedRobot):
         double_no_contact = torch.sum(1.*contacts, dim=1)==2
         return 1.*double_no_contact
     
-    def _reward_footPosture(self):
+    def _reward_foot_posture(self):
         trunk_euler = get_euler_xyz(self.rigid_rotation[:, 0, :])
         leftFoot_roll = trunk_euler[0] + self.dof_pos[:, 1] + self.dof_pos[:, 5]
         rightFoot_roll = trunk_euler[0] + self.dof_pos[:, 8] + self.dof_pos[:, 12]
@@ -68,6 +91,6 @@ class Tiangong(LeggedRobot):
     # def _reward_armPosition(self):
     #     return torch.abs(self.dof_pos[:, 10]) + torch.abs(self.dof_pos[:, 11])
     
-    def _reward_hipSymmetry(self):
+    def _reward_hip_symmetry(self):
         return torch.abs(self.dof_pos[:, 2] - self.dof_pos[:, 9])
 

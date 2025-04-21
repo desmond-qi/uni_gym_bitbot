@@ -37,11 +37,16 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser()
     parser.add_argument("config_file", type=str, help="config file name in the config folder")
     args = parser.parse_args()
-    config_file = args.config_file    
-    idx2gym = [7, 8, 9, 10, 11, 12, 13,
-               0, 1, 2,  3,  4,  5,  6]
-    idx2mjc= [7, 8, 9, 10, 11, 12, 13,
-              0, 1, 2,  3,  4,  5,  6]
+    config_file = args.config_file 
+    idx2gym = [0,  1,  2,  3,   4,   5,  12,
+               6,  7,  8,  9,  10,  11,  13]
+    idx2mjc=  [0,  1,  2,  3,   4,   5,
+               7,  8,  9, 10,  11,  12,
+               6, 13]
+    # idx2gym = [7, 8, 9, 10, 11, 12, 13,
+    #            0, 1, 2,  3,  4,  5,  6]
+    # idx2mjc= [7, 8, 9, 10, 11, 12, 13,
+    #           0, 1, 2,  3,  4,  5,  6]
     with open(f"{LEGGED_GYM_ROOT_DIR}/deploy/deploy_mujoco/configs/{config_file}", "r") as f:
         config = yaml.load(f, Loader=yaml.FullLoader)
         policy_path = config["policy_path"].replace("{LEGGED_GYM_ROOT_DIR}", LEGGED_GYM_ROOT_DIR)
@@ -122,17 +127,12 @@ if __name__ == "__main__":
                 omega = d.qvel[3:6]
                 basevel = d.qvel[:3]
 
-                qj = (qj - default_angles) * dof_pos_scale
+                # qj = (qj - default_angles) * dof_pos_scale
+                qj = qj * dof_pos_scale
                 dqj = dqj * dof_vel_scale
                 gravity_orientation = get_gravity_orientation(quat)
                 omega = omega * ang_vel_scale
                 basevel = basevel * lin_vel_scale
-
-                period = 0.5
-                count = counter * simulation_dt
-                phase = count % period / period
-                sin_phase = np.sin(2 * np.pi * phase)
-                cos_phase = np.cos(2 * np.pi * phase)
 
                 obs[:3] = basevel
                 obs[3:6] = omega

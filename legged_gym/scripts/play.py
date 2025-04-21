@@ -44,7 +44,7 @@ def play(args):
         dof_pos_limits = env.dof_pos_limits
         logger = Logger(env.dt, dof_names)
         robot_idx = 0
-        stop_record_log = 150
+        stop_record_log = 50
         action_scale = env_cfg.control.action_scale
 
         # get the dir to loaded run and model: 

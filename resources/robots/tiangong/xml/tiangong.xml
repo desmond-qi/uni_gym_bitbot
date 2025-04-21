@@ -130,7 +130,7 @@
       <!-- 左肩部 -->
       <body name="waist_link" pos="0 0 0.0192">
         <inertial pos="-0.005467 -1.6e-05 0.302017" quat="0.999997 -0.000445579 0.00204636 0.000857429" mass="13.8" diaginertia="0.527633 0.471407 0.111934"/>
-        <joint name="waist_joint" pos="0 0 0" axis="0 0 1" range="-0.00001 0.00001" />
+<!--        <joint name="waist_joint" pos="0 0 0" axis="0 0 1" range="-0.00001 0.00001" />-->
         <geom type="mesh" contype="0" conaffinity="0" group="1" density="0" rgba="0.752941 0.752941 0.752941 1" mesh="waist_link"/>
         <geom size="0.15 0.2" pos="0 0 0.3" type="cylinder" rgba="0.752941 0.752941 0.752941 0"/>
         <site name="imu_site" pos="0.0 0 0" size="0.02" rgba="1 0 0 1" type="sphere"/>
@@ -144,17 +144,17 @@
           <geom size="0.03 0.04" pos="0 -0.04 0" quat="0.707388 0.706825 0 0" type="cylinder" rgba="0.752941 0.752941 0.752941 0"/>
           <body name="shoulder_roll_l_link" pos="-0.0025 0.062 0">
             <inertial pos="0.004522 -1.1e-05 -0.042682" quat="0.998305 -0.000402439 -0.0567556 0.0128931" mass="0.933844" diaginertia="0.00172439 0.00172 0.000214608"/>
-            <joint name="shoulder_roll_l_joint" pos="0 0 0" axis="1 0 0" range="-0.08 3.49" actuatorfrcrange="-36 36"/>
+<!--            <joint name="shoulder_roll_l_joint" pos="0 0 0" axis="1 0 0" range="-0.08 3.49" actuatorfrcrange="-36 36"/>-->
             <geom type="mesh" contype="0" conaffinity="0" group="1" density="0" rgba="0.752941 0.752941 0.752941 1" mesh="shoulder_roll_l_link"/>
             <geom size="0.03 0.05" pos="0 0 -0.04" type="cylinder" rgba="0.752941 0.752941 0.752941 0"/>
             <body name="shoulder_yaw_l_link" pos="0 0 -0.107">
               <inertial pos="-4.4e-05 -0.002833 -0.092643" quat="0.99953 0.021415 -0.00112945 0.0218915" mass="0.610091" diaginertia="0.000943047 0.000919241 0.000218712"/>
-              <joint name="shoulder_yaw_l_joint" pos="0 0 0" axis="0 0 1" range="-2.96 2.96" actuatorfrcrange="-36 36"/>
+<!--              <joint name="shoulder_yaw_l_joint" pos="0 0 0" axis="0 0 1" range="-2.96 2.96" actuatorfrcrange="-36 36"/>-->
               <geom type="mesh" contype="0" conaffinity="0" group="1" density="0" rgba="0.752941 0.752941 0.752941 1" mesh="shoulder_yaw_l_link"/>
               <geom size="0.03 0.035" pos="0 0 -0.06" type="cylinder" rgba="0.752941 0.752941 0.752941 0"/>
               <body name="elbow_l_link" pos="0 0 -0.11">
                 <inertial pos="-0.000267 -0.001013 -0.14593" quat="0.999986 -0.00527177 -0.000404357 -0.000472232" mass="0.341159" diaginertia="0.005196 0.00515155 0.000219448"/>
-                <joint name="elbow_l_joint" pos="0 0 0" axis="0 1 0" range="-2.1 0" actuatorfrcrange="-36 36"/>
+<!--                <joint name="elbow_l_joint" pos="0 0 0" axis="0 1 0" range="-2.1 0" actuatorfrcrange="-36 36"/>-->
                 <geom type="mesh" contype="0" conaffinity="0" group="1" density="0" rgba="0.898039 0.917647 0.929412 1" mesh="elbow_l_link"/>
                 <geom size="0.02 0.125" pos="0 0 -0.15" type="cylinder" rgba="0.898039 0.917647 0.929412 0"/>
               </body>
@@ -169,17 +169,17 @@
           <geom size="0.03 0.04" pos="0 0.04 0" quat="0.707388 0.706825 0 0" type="cylinder" rgba="0.752941 0.752941 0.752941 0"/>
           <body name="shoulder_roll_r_link" pos="-0.0025 -0.062 0">
             <inertial pos="0.004522 1.1e-05 -0.042682" quat="0.998305 0.000402439 -0.0567556 -0.0128931" mass="0.933844" diaginertia="0.00172439 0.00172 0.000214608"/>
-            <joint name="shoulder_roll_r_joint" pos="0 0 0" axis="1 0 0" range="-3.49 0.08" actuatorfrcrange="-36 36"/>
+<!--            <joint name="shoulder_roll_r_joint" pos="0 0 0" axis="1 0 0" range="-3.49 0.08" actuatorfrcrange="-36 36"/>-->
             <geom type="mesh" contype="0" conaffinity="0" group="1" density="0" rgba="0.752941 0.752941 0.752941 1" mesh="shoulder_roll_r_link"/>
             <geom size="0.03 0.05" pos="0 0 -0.04" type="cylinder" rgba="0.752941 0.752941 0.752941 1"/>
             <body name="shoulder_yaw_r_link" pos="0 0 -0.107">
               <inertial pos="-4.4e-05 0.002833 -0.092643" quat="0.99953 -0.021415 -0.00112945 -0.0218915" mass="0.610091" diaginertia="0.000943047 0.000919241 0.000218712"/>
-              <joint name="shoulder_yaw_r_joint" pos="0 0 0" axis="0 0 1" range="-2.96 2.96" actuatorfrcrange="-36 36"/>
+<!--              <joint name="shoulder_yaw_r_joint" pos="0 0 0" axis="0 0 1" range="-2.96 2.96" actuatorfrcrange="-36 36"/>-->
               <geom type="mesh" contype="0" conaffinity="0" group="1" density="0" rgba="0.752941 0.752941 0.752941 1" mesh="shoulder_yaw_r_link"/>
               <geom size="0.03 0.035" pos="0 0 -0.06" type="cylinder" rgba="0.752941 0.752941 0.752941 0"/>
               <body name="elbow_r_link" pos="0 0 -0.11">
                 <inertial pos="-0.000267 0.001013 -0.14593" quat="0.999986 0.00527177 -0.000404357 0.000472232" mass="0.341159" diaginertia="0.005196 0.00515155 0.000219448"/>
-                <joint name="elbow_r_joint" pos="0 0 0" axis="0 1 0" range="-2.1 0" actuatorfrcrange="-36 36"/>
+<!--                <joint name="elbow_r_joint" pos="0 0 0" axis="0 1 0" range="-2.1 0" actuatorfrcrange="-36 36"/>-->
                 <geom type="mesh" contype="0" conaffinity="0" group="1" density="0" rgba="0.898039 0.917647 0.929412 1" mesh="elbow_r_link"/>
                 <geom size="0.02 0.125" pos="0 0 -0.15" type="cylinder" rgba="0.898039 0.917647 0.929412 0"/>
               </body>
@@ -192,7 +192,6 @@
 
 
   <contact>
-
     <pair name="left_feet" geom1="ankle_roll_l_link" geom2="floor" condim="6" friction="2 2 0.05 0.05 0.05"/>
     <pair name="right_feet" geom1="ankle_roll_r_link" geom2="floor" condim="6" friction="2 2 0.05 0.05 0.05"/>
   </contact>

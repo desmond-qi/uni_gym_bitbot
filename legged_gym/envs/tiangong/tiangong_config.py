@@ -18,7 +18,6 @@ class TiangongCfg(LeggedRobotCfg):
         class ranges(LeggedRobotCfg.commands.ranges):
             lin_vel_x = [-2.0, 2.0]
 
-
     class init_state(LeggedRobotCfg.init_state):
         pos = [0.0, 0.0, 1.1]  # Initial position x, y, z [m]
         # initPos_euler = [0.0, -0.0 * D2R, 0.0]
@@ -92,8 +91,8 @@ class TiangongCfg(LeggedRobotCfg):
             #qhx
             double_fly = 0.3
             double_no_fly = 0.1
-            hipSymmetry = -1.e-2
-            # footPosture = .0
+            hip_symmetry = -1.e-2
+            # foot_posture = .0
             # footAngVel = -1.e-5
             # armSymmetry = -1.e-2
             # armPosition = -1.e-5
