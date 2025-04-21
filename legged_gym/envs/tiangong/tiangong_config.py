@@ -7,7 +7,8 @@ D2R = np.pi / 180.0
 class TiangongCfg(LeggedRobotCfg):
     class env(LeggedRobotCfg.env):
         num_envs = 4096
-        num_observations = 54
+        num_observations = 51
+        num_privileged_obs = 54
         num_actions = 14
 
     class terrain(LeggedRobotCfg.terrain):
