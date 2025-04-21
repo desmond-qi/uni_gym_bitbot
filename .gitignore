@@ -166,3 +166,6 @@ logs/
 deploy/pre_train/g1/*
 
 deploy/deploy_mujoco/log/*
+log/20250421-155415.csv
+*.csv
+*.0
