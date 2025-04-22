@@ -125,22 +125,22 @@ if __name__ == "__main__":
                 dqj = d.qvel[6:][idx2gym]
                 quat = d.qpos[3:7]
                 omega = d.qvel[3:6]
-                basevel = d.qvel[:3]
+                # basevel = d.qvel[:3]
 
                 # qj = (qj - default_angles) * dof_pos_scale
                 qj = qj * dof_pos_scale
                 dqj = dqj * dof_vel_scale
                 gravity_orientation = get_gravity_orientation(quat)
                 omega = omega * ang_vel_scale
-                basevel = basevel * lin_vel_scale
+                # basevel = basevel * lin_vel_scale
 
-                obs[:3] = basevel
-                obs[3:6] = omega
-                obs[6:9] = gravity_orientation
-                obs[9:12] = cmd * cmd_scale
-                obs[12 : 12 + num_actions] = qj
-                obs[12 + num_actions : 12 + 2 * num_actions] = dqj
-                obs[12 + 2 * num_actions : 12 + 3 * num_actions] = action
+                # obs[:3] = basevel
+                obs[:3] = omega
+                obs[3:6] = gravity_orientation
+                obs[6:9] = cmd * cmd_scale
+                obs[9 : 9 + num_actions] = qj
+                obs[9 + num_actions : 9 + 2 * num_actions] = dqj
+                obs[9 + 2 * num_actions : 9 + 3 * num_actions] = action
                 obs_tensor = torch.from_numpy(obs).unsqueeze(0)
                 # policy inference
 
