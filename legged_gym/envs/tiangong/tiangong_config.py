@@ -19,6 +19,15 @@ class TiangongCfg(LeggedRobotCfg):
         class ranges(LeggedRobotCfg.commands.ranges):
             lin_vel_x = [-2.0, 2.0]
 
+    class domain_rand(LeggedRobotCfg.domain_rand):
+        randomize_friction = True
+        friction_range = [0.1, 1.25]
+        randomize_base_mass = True
+        added_mass_range = [-1., 3.]
+        push_robots = True
+        push_interval_s = 5
+        max_push_vel_xy = 1.5
+
     class init_state(LeggedRobotCfg.init_state):
         pos = [0.0, 0.0, 1.1]  # Initial position x, y, z [m]
         # initPos_euler = [0.0, -0.0 * D2R, 0.0]
@@ -107,7 +116,7 @@ class TiangongCfgPPO(LeggedRobotCfgPPO):
     class runner(LeggedRobotCfgPPO.runner):
         run_name = 'tiangong_training'
         experiment_name = 'tiangong_experiment'
-        max_iterations = 1000
+        max_iterations = 2000
 
     class algorithm(LeggedRobotCfgPPO.algorithm):
         entropy_coef = 0.02
