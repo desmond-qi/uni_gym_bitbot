@@ -1,6 +1,6 @@
 # 
 # policy_path: "{LEGGED_GYM_ROOT_DIR}/logs/tiangong_experiment/Apr17_17-27tiangong_training/model_1500.pt"
-policy_path: "{LEGGED_GYM_ROOT_DIR}/logs/tiangong_experiment/exported/policies/policy_Stand.pt"
+policy_path: "{LEGGED_GYM_ROOT_DIR}/logs/tiangong_experiment/exported/policies/policy_1.pt"
 xml_path: "{LEGGED_GYM_ROOT_DIR}/resources/robots/tiangong/xml/tiangong.xml"
 show_log_plot: True
 
