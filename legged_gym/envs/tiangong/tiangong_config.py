@@ -79,24 +79,26 @@ class TiangongCfg(LeggedRobotCfg):
         only_positive_rewards = False
         class scales( LeggedRobotCfg.rewards.scales ):
             termination = -200.
-            tracking_ang_vel = 1.0
-            tracking_lin_vel = 1.0
+            tracking_ang_vel = 0.0
+            tracking_lin_vel = 0.0
             torques = -5.e-6
             dof_acc = -2.e-6
-            lin_vel_z = 0.05
-            feet_air_time = 1.
+            lin_vel_z = -2.e-3
+            feet_air_time = 0.
             dof_pos_limits = -1.
             dof_vel = -0.0
             ang_vel_xy = -0.0
             feet_contact_forces = -0.
             #qhx
-            double_fly = 0.3
-            double_no_fly = 0.1
+            double_fly = 0.0
+            double_no_fly = 0.5
             hip_symmetry = -1.e-2
             # foot_posture = .0
             # footAngVel = -1.e-5
             # armSymmetry = -1.e-2
             # armPosition = -1.e-5
+            arm_velocity = -2.e-2
+            posture_roll = -2.e-2
     
     # class viewer(LeggedRobotCfg.viewer):
         # pos = [3, 0, 1]
@@ -105,7 +107,7 @@ class TiangongCfgPPO(LeggedRobotCfgPPO):
     class runner(LeggedRobotCfgPPO.runner):
         run_name = 'tiangong_training'
         experiment_name = 'tiangong_experiment'
-        max_iterations = 1500
+        max_iterations = 1000
 
     class algorithm(LeggedRobotCfgPPO.algorithm):
         entropy_coef = 0.02

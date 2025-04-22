@@ -51,14 +51,16 @@ class Tiangong(LeggedRobot):
 
     def _resample_commands(self, env_ids):
         if self.isTrain:
-            self.commands[env_ids, 0] = torch_rand_float(self.command_ranges["lin_vel_x"][0], self.command_ranges["lin_vel_x"][1], (len(env_ids), 1), device=self.device).squeeze(1)
-            self.commands[env_ids, 1] = torch_rand_float(self.command_ranges["lin_vel_y"][0], self.command_ranges["lin_vel_y"][1], (len(env_ids), 1), device=self.device).squeeze(1)
-            if self.cfg.commands.heading_command:
-                self.commands[env_ids, 3] = torch_rand_float(self.command_ranges["heading"][0], self.command_ranges["heading"][1], (len(env_ids), 1), device=self.device).squeeze(1)
-            else:
-                self.commands[env_ids, 2] = torch_rand_float(self.command_ranges["ang_vel_yaw"][0], self.command_ranges["ang_vel_yaw"][1], (len(env_ids), 1), device=self.device).squeeze(1)
+            # self.commands[env_ids, 0] = torch_rand_float(self.command_ranges["lin_vel_x"][0], self.command_ranges["lin_vel_x"][1], (len(env_ids), 1), device=self.device).squeeze(1)
+            # self.commands[env_ids, 1] = torch_rand_float(self.command_ranges["lin_vel_y"][0], self.command_ranges["lin_vel_y"][1], (len(env_ids), 1), device=self.device).squeeze(1)
+            # if self.cfg.commands.heading_command:
+            #     self.commands[env_ids, 3] = torch_rand_float(self.command_ranges["heading"][0], self.command_ranges["heading"][1], (len(env_ids), 1), device=self.device).squeeze(1)
+            # else:
+            #     self.commands[env_ids, 2] = torch_rand_float(self.command_ranges["ang_vel_yaw"][0], self.command_ranges["ang_vel_yaw"][1], (len(env_ids), 1), device=self.device).squeeze(1)
+            for i in range(4):
+                self.commands[env_ids, i] = torch_rand_float(0, 0, (len(env_ids), 1), device=self.device).squeeze(1)
         else:
-            self.commands[env_ids, 0] = 1.5
+            self.commands[env_ids, 0] = 0.0
             self.commands[env_ids, 1] = 0.0
             self.commands[env_ids, 2] = 0.0
             self.commands[env_ids, 3] = 0.
@@ -93,4 +95,11 @@ class Tiangong(LeggedRobot):
     
     def _reward_hip_symmetry(self):
         return torch.abs(self.dof_pos[:, 2] - self.dof_pos[:, 9])
+    
+    def _reward_arm_velocity(self):
+        return torch.abs(self.dof_vel[:, 6]) + torch.abs(self.dof_vel[:, 13])
+    
+    def _reward_posture_roll(self):
+        trunk_euler = get_euler_xyz(self.rigid_rotation[:, 0, :])
+        return torch.abs(trunk_euler[0])
 
