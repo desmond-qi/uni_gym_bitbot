@@ -7,7 +7,7 @@ show_log_plot: True
 # Total simulation time
 simulation_duration: 20
 # Simulation time step
-simulation_dt: 0.002
+simulation_dt: 0.003
 # Controller update frequency (meets the requirement of simulation_dt * controll_decimation=0.02; 50Hz)
 control_decimation: 10
 

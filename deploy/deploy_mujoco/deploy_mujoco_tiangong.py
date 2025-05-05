@@ -43,10 +43,6 @@ if __name__ == "__main__":
     idx2mjc=  [0,  1,  2,  3,   4,   5,
                7,  8,  9, 10,  11,  12,
                6, 13]
-    # idx2gym = [7, 8, 9, 10, 11, 12, 13,
-    #            0, 1, 2,  3,  4,  5,  6]
-    # idx2mjc= [7, 8, 9, 10, 11, 12, 13,
-    #           0, 1, 2,  3,  4,  5,  6]
     with open(f"{LEGGED_GYM_ROOT_DIR}/deploy/deploy_mujoco/configs/{config_file}", "r") as f:
         config = yaml.load(f, Loader=yaml.FullLoader)
         policy_path = config["policy_path"].replace("{LEGGED_GYM_ROOT_DIR}", LEGGED_GYM_ROOT_DIR)
@@ -127,8 +123,8 @@ if __name__ == "__main__":
                 omega = d.qvel[3:6]
                 # basevel = d.qvel[:3]
 
-                # qj = (qj - default_angles) * dof_pos_scale
-                qj = qj * dof_pos_scale
+                qj = (qj - default_angles) * dof_pos_scale
+                # qj = qj * dof_pos_scale
                 dqj = dqj * dof_vel_scale
                 gravity_orientation = get_gravity_orientation(quat)
                 omega = omega * ang_vel_scale
