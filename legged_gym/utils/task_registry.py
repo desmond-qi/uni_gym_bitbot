@@ -35,11 +35,11 @@ class TaskRegistry():
         return env_cfg, train_cfg
     
     def make_env(self, name, args=None, env_cfg=None, isTrain=None) -> Tuple[VecEnv, LeggedRobotCfg]:
-        """ Creates an environment either from a registered namme or from the provided config file.
+        """ Creates an environment either from a registered name or from the provided config file.
 
         Args:
             name (string): Name of a registered env.
-            args (Args, optional): Isaac Gym comand line arguments. If None get_args() will be called. Defaults to None.
+            args (Args, optional): Isaac Gym command line arguments. If None get_args() will be called. Defaults to None.
             env_cfg (Dict, optional): Environment config file used to override the registered config. Defaults to None.
 
         Raises:
