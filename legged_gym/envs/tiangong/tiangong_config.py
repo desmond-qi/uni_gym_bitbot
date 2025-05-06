@@ -59,7 +59,7 @@ class TiangongCfg(LeggedRobotCfg):
                      'knee_pitch_joint': 200,
                      'ankle_pitch_joint': 40,
                      'ankle_roll_joint': 40,
-                     'shoulder_pitch_joint': 150,
+                     'shoulder_pitch_joint': 50,
                      }  # [N*m/rad]
         damping = {  'hip_yaw_joint': 2,
                      'hip_roll_joint': 2,
@@ -67,7 +67,7 @@ class TiangongCfg(LeggedRobotCfg):
                      'knee_pitch_joint': 4,
                      'ankle_pitch_joint': 2,
                      'ankle_roll_joint': 2,
-                     'shoulder_pitch_joint': 2,
+                     'shoulder_pitch_joint': 1,
                      } # [N*m*s/rad]
         action_scale = 0.25  # Scale for actions
         decimation = 4  # Number of control action updates per policy update
@@ -88,35 +88,41 @@ class TiangongCfg(LeggedRobotCfg):
         only_positive_rewards = False
         class scales( LeggedRobotCfg.rewards.scales ):
             termination = -200.
-            tracking_ang_vel = 0.0
-            tracking_lin_vel = 0.0
+            tracking_ang_vel = 1.0
+            tracking_lin_vel = 5.0
             torques = -5.e-6
             dof_acc = -2.e-6
             lin_vel_z = -2.e-3
-            feet_air_time = 0.
+            feet_air_time = 1.
             dof_pos_limits = -1.
             dof_vel = -0.0
             ang_vel_xy = -0.0
             feet_contact_forces = -0.
             #qhx
-            double_fly = 0.0
-            double_no_fly = 0.5
-            hip_symmetry = -1.e-2
+            # double_fly = 0.0
+            # double_no_fly = 0.5
+            contact = 0.5
+            hip_symmetry = -1.e-1
             # foot_posture = .0
             # footAngVel = -1.e-5
-            # armSymmetry = -1.e-2
+            arm_symmetry = -1.e-1
             # armPosition = -1.e-5
             arm_velocity = -2.e-2
-            posture_roll = -2.e-2
+            posture_roll = -2.e-1
     
     # class viewer(LeggedRobotCfg.viewer):
         # pos = [3, 0, 1]
 
 class TiangongCfgPPO(LeggedRobotCfgPPO):
+    class policy:
+        init_noise_std = 0.8
+        actor_hidden_dims = [64, 32]
+        critic_hidden_dims = [64, 32]
+        activation = 'elu'  # can be elu, relu, selu, crelu, lrelu, tanh, sigmoid
     class runner(LeggedRobotCfgPPO.runner):
         run_name = 'tiangong_training'
         experiment_name = 'tiangong_experiment'
-        max_iterations = 2000
+        max_iterations = 3000
 
     class algorithm(LeggedRobotCfgPPO.algorithm):
         entropy_coef = 0.02

@@ -49,16 +49,44 @@ class Tiangong(LeggedRobot):
         self.rigid_rotation = self.rigid_state.view(self.num_envs, self.num_bodies, 13)[..., 3:7]
         self.rigid_position = self.rigid_state.view(self.num_envs, self.num_bodies, 13)[..., 0:3]
 
+        self.feet_num = len(self.feet_indices)
+        rigid_body_state = self.gym.acquire_rigid_body_state_tensor(self.sim)
+        self.rigid_body_states = gymtorch.wrap_tensor(rigid_body_state)
+        self.rigid_body_states_view = self.rigid_body_states.view(self.num_envs, -1, 13)
+        self.feet_state = self.rigid_body_states_view[:, self.feet_indices, :]
+        self.feet_pos = self.feet_state[:, :, :3]
+        self.feet_vel = self.feet_state[:, :, 7:10]
+
+    def update_feet_state(self):
+        self.gym.refresh_rigid_body_state_tensor(self.sim)
+
+        self.feet_state = self.rigid_body_states_view[:, self.feet_indices, :]
+        self.feet_pos = self.feet_state[:, :, :3]
+        self.feet_vel = self.feet_state[:, :, 7:10]
+
+    def _post_physics_step_callback(self):
+        self.update_feet_state()
+
+        period = 0.8
+        offset = 0.5
+        self.phase = (self.episode_length_buf * self.dt) % period / period
+        self.phase_left = self.phase
+        self.phase_right = (self.phase + offset) % 1
+        self.leg_phase = torch.cat([self.phase_left.unsqueeze(1), self.phase_right.unsqueeze(1)], dim=-1)
+
+        return super()._post_physics_step_callback()
+
+
     def _resample_commands(self, env_ids):
         if self.isTrain:
-            # self.commands[env_ids, 0] = torch_rand_float(self.command_ranges["lin_vel_x"][0], self.command_ranges["lin_vel_x"][1], (len(env_ids), 1), device=self.device).squeeze(1)
-            # self.commands[env_ids, 1] = torch_rand_float(self.command_ranges["lin_vel_y"][0], self.command_ranges["lin_vel_y"][1], (len(env_ids), 1), device=self.device).squeeze(1)
-            # if self.cfg.commands.heading_command:
-            #     self.commands[env_ids, 3] = torch_rand_float(self.command_ranges["heading"][0], self.command_ranges["heading"][1], (len(env_ids), 1), device=self.device).squeeze(1)
-            # else:
-            #     self.commands[env_ids, 2] = torch_rand_float(self.command_ranges["ang_vel_yaw"][0], self.command_ranges["ang_vel_yaw"][1], (len(env_ids), 1), device=self.device).squeeze(1)
-            for i in range(4):
-                self.commands[env_ids, i] = torch_rand_float(0, 0, (len(env_ids), 1), device=self.device).squeeze(1)
+            self.commands[env_ids, 0] = torch_rand_float(self.command_ranges["lin_vel_x"][0], self.command_ranges["lin_vel_x"][1], (len(env_ids), 1), device=self.device).squeeze(1)
+            self.commands[env_ids, 1] = torch_rand_float(self.command_ranges["lin_vel_y"][0], self.command_ranges["lin_vel_y"][1], (len(env_ids), 1), device=self.device).squeeze(1)
+            if self.cfg.commands.heading_command:
+                self.commands[env_ids, 3] = torch_rand_float(self.command_ranges["heading"][0], self.command_ranges["heading"][1], (len(env_ids), 1), device=self.device).squeeze(1)
+            else:
+                self.commands[env_ids, 2] = torch_rand_float(self.command_ranges["ang_vel_yaw"][0], self.command_ranges["ang_vel_yaw"][1], (len(env_ids), 1), device=self.device).squeeze(1)
+            # for i in range(4):
+            #     self.commands[env_ids, i] = torch_rand_float(0, 0, (len(env_ids), 1), device=self.device).squeeze(1)
         else:
             self.commands[env_ids, 0] = 0.0
             self.commands[env_ids, 1] = 0.0
@@ -77,7 +105,22 @@ class Tiangong(LeggedRobot):
         contacts = self.contact_forces[:, self.feet_indices, 2] < 0.1
         double_no_contact = torch.sum(1.*contacts, dim=1)==2
         return 1.*double_no_contact
-    
+
+    # def _reward_contact(self):
+    #     res = torch.zeros(self.num_envs, dtype=torch.float, device=self.device)
+    #     for i in range(self.feet_num):
+    #         contact = self.contact_forces[:, self.feet_indices[i], 2] > 0.1
+    #         res += torch.sum(1.*contact)==1
+    #     return 1.*res
+
+    def _reward_contact(self):
+        res = torch.zeros(self.num_envs, dtype=torch.float, device=self.device)
+        for i in range(self.feet_num):
+            is_stance = self.leg_phase[:, i] < 0.55
+            contact = self.contact_forces[:, self.feet_indices[i], 2] > 1
+            res += ~(contact ^ is_stance)
+        return res
+
     def _reward_foot_posture(self):
         trunk_euler = get_euler_xyz(self.rigid_rotation[:, 0, :])
         leftFoot_roll = trunk_euler[0] + self.dof_pos[:, 1] + self.dof_pos[:, 5]
@@ -87,14 +130,14 @@ class Tiangong(LeggedRobot):
     # def _reward_footAngVel(self):
     #     return torch.abs(self.dof_vel[:, 3]) + torch.abs(self.dof_vel[:, 8])
     
-    # def _reward_armSymmetry(self):
-    #     return torch.abs(self.dof_pos[:, 10] - self.dof_pos[:, 11])
+    def _reward_arm_symmetry(self):
+        return torch.abs(self.dof_pos[:, 6] - self.dof_pos[:, 13])
     
     # def _reward_armPosition(self):
     #     return torch.abs(self.dof_pos[:, 10]) + torch.abs(self.dof_pos[:, 11])
     
     def _reward_hip_symmetry(self):
-        return torch.abs(self.dof_pos[:, 2] - self.dof_pos[:, 9])
+        return torch.abs(self.dof_pos[:, 2] - self.dof_pos[:, 9]) + torch.abs(self.dof_pos[:, 1] - self.dof_pos[:, 8]) + torch.abs(self.dof_pos[:, 0] - self.dof_pos[:, 7])
     
     def _reward_arm_velocity(self):
         return torch.abs(self.dof_vel[:, 6]) + torch.abs(self.dof_vel[:, 13])
