@@ -35,16 +35,16 @@ class TiangongCfg(LeggedRobotCfg):
         # initPos_quate = trans.as_quat()
         # rot = [initPos_quate[0], initPos_quate[1], initPos_quate[2], initPos_quate[3]]
         default_joint_angles = {  # Target angles [rad] when action = 0.0
-            'lhip_yaw_joint': 0.0 * D2R,
             'lhip_roll_joint': 0.0 * D2R,
+            'lhip_yaw_joint': 0.0 * D2R,
             'lhip_pitch_joint': -20.0 * D2R, #'hip_y_left': 70.0 * D2R,
             'lknee_pitch_joint': 40.0 * D2R, #'knee_left': -100.0 * D2R,
             'lankle_pitch_joint': -20.0 * D2R, #'ankle_y_left': 46.0 * D2R,
             'lankle_roll_joint': 0.0 * D2R,
             'lshoulder_pitch_joint': 0.0 * D2R,
 
-            'rhip_yaw_joint': 0.0 * D2R,
             'rhip_roll_joint': 0.0 * D2R,
+            'rhip_yaw_joint': 0.0 * D2R,
             'rhip_pitch_joint': -20.0 * D2R, #'hip_y_left': 70.0 * D2R,
             'rknee_pitch_joint': 40.0 * D2R, #'knee_left': -100.0 * D2R,
             'rankle_pitch_joint': -20.0 * D2R, #'ankle_y_left': 46.0 * D2R,
@@ -53,16 +53,16 @@ class TiangongCfg(LeggedRobotCfg):
         }
 
     class control(LeggedRobotCfg.control):
-        stiffness = {'hip_yaw_joint': 150,
-                     'hip_roll_joint': 150,
+        stiffness = {'hip_roll_joint': 150,
+                     'hip_yaw_joint': 150,
                      'hip_pitch_joint': 150,
                      'knee_pitch_joint': 200,
                      'ankle_pitch_joint': 40,
                      'ankle_roll_joint': 40,
                      'shoulder_pitch_joint': 50,
                      }  # [N*m/rad]
-        damping = {  'hip_yaw_joint': 2,
-                     'hip_roll_joint': 2,
+        damping = {  'hip_roll_joint': 2,
+                     'hip_yaw_joint': 2,
                      'hip_pitch_joint': 2,
                      'knee_pitch_joint': 4,
                      'ankle_pitch_joint': 2,
