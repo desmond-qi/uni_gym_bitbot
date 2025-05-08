@@ -96,6 +96,33 @@ class Tiangong(LeggedRobot):
         # set small commands to zero
         self.commands[env_ids, :2] *= (torch.norm(self.commands[env_ids, :2], dim=1) > 0.2).unsqueeze(1)
 
+    def _reset_dofs(self, env_ids):
+        self.dof_pos[env_ids] = self.default_dof_pos * torch_rand_float(0.5, 1.5, (len(env_ids), self.num_dof), device=self.device)
+        self.dof_vel[env_ids] = 0.
+
+        env_ids_int32 = env_ids.to(dtype=torch.int32)
+        self.gym.set_dof_state_tensor_indexed(self.sim,
+                                              gymtorch.unwrap_tensor(self.dof_state),
+                                              gymtorch.unwrap_tensor(env_ids_int32), len(env_ids_int32))
+
+        for i in range(self.num_dofs):
+            name = self.dof_names[i]
+            found = False
+            for dof_name in self.cfg.control.stiffness.keys():
+                if dof_name in name:
+                    if self.cfg.domain_rand.randomize_PD:
+                        self.p_gains[i] = self.cfg.control.stiffness[dof_name] * np.random.uniform(self.cfg.domain_rand.Kp_ratio_bias_range[0], self.cfg.domain_rand.Kp_ratio_bias_range[1])
+                        self.d_gains[i] = self.cfg.control.damping[dof_name] * np.random.uniform(self.cfg.domain_rand.Kd_ratio_bias_range[0], self.cfg.domain_rand.Kd_ratio_bias_range[1])
+                    else:
+                        self.p_gains[i] = self.cfg.control.damping[dof_name]
+                        self.d_gains[i] = self.cfg.control.damping[dof_name]
+                    found = True
+            if not found:
+                self.p_gains[i] = 0.
+                self.d_gains[i] = 0.
+                if self.cfg.control.control_type in ["P", "V"]:
+                    print(f"PD gain of joint {name} were not defined, setting them to zero")
+
     def _reward_double_no_fly(self):
         contacts = self.contact_forces[:, self.feet_indices, 2] > 0.1
         double_contact = torch.sum(1.*contacts, dim=1)==2

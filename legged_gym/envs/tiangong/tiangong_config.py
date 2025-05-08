@@ -27,6 +27,9 @@ class TiangongCfg(LeggedRobotCfg):
         push_robots = True
         push_interval_s = 5
         max_push_vel_xy = 1.5
+        randomize_PD = True
+        Kp_ratio_bias_range = [0.5, 1.5]
+        Kd_ratio_bias_range = [0.5, 1.5]
 
     class init_state(LeggedRobotCfg.init_state):
         pos = [0.0, 0.0, 1.1]  # Initial position x, y, z [m]
@@ -122,7 +125,7 @@ class TiangongCfgPPO(LeggedRobotCfgPPO):
     class runner(LeggedRobotCfgPPO.runner):
         run_name = 'tiangong_training'
         experiment_name = 'tiangong_experiment'
-        max_iterations = 3000
+        max_iterations = 1000
 
     class algorithm(LeggedRobotCfgPPO.algorithm):
         entropy_coef = 0.02

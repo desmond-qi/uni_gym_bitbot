@@ -106,6 +106,9 @@ class LeggedRobotCfg(BaseConfig):
         push_robots = True
         push_interval_s = 15
         max_push_vel_xy = 1.
+        randomize_PD = False
+        Kp_ratio_bias_range = [1.0, 1.5]
+        Kd_ratio_bias_range = [1.0, 1.5]
 
     class rewards:
         class scales:
