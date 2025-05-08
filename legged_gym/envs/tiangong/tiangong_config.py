@@ -125,7 +125,7 @@ class TiangongCfgPPO(LeggedRobotCfgPPO):
     class runner(LeggedRobotCfgPPO.runner):
         run_name = 'tiangong_training'
         experiment_name = 'tiangong_experiment'
-        max_iterations = 1000
+        max_iterations = 3000
 
     class algorithm(LeggedRobotCfgPPO.algorithm):
         entropy_coef = 0.02
