@@ -105,7 +105,7 @@ class TiangongCfg(LeggedRobotCfg):
             # double_fly = 0.0
             # double_no_fly = 0.5
             contact = 0.5
-            hip_symmetry = -1.e-1
+            hip_symmetry = -10.0
             # foot_posture = .0
             # footAngVel = -1.e-5
             arm_symmetry = -1.e-1

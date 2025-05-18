@@ -105,23 +105,24 @@ class Tiangong(LeggedRobot):
                                               gymtorch.unwrap_tensor(self.dof_state),
                                               gymtorch.unwrap_tensor(env_ids_int32), len(env_ids_int32))
 
-        for i in range(self.num_dofs):
-            name = self.dof_names[i]
-            found = False
-            for dof_name in self.cfg.control.stiffness.keys():
-                if dof_name in name:
-                    if self.cfg.domain_rand.randomize_PD:
-                        self.p_gains[i] = self.cfg.control.stiffness[dof_name] * np.random.uniform(self.cfg.domain_rand.Kp_ratio_bias_range[0], self.cfg.domain_rand.Kp_ratio_bias_range[1])
-                        self.d_gains[i] = self.cfg.control.damping[dof_name] * np.random.uniform(self.cfg.domain_rand.Kd_ratio_bias_range[0], self.cfg.domain_rand.Kd_ratio_bias_range[1])
-                    else:
-                        self.p_gains[i] = self.cfg.control.damping[dof_name]
-                        self.d_gains[i] = self.cfg.control.damping[dof_name]
-                    found = True
-            if not found:
-                self.p_gains[i] = 0.
-                self.d_gains[i] = 0.
-                if self.cfg.control.control_type in ["P", "V"]:
-                    print(f"PD gain of joint {name} were not defined, setting them to zero")
+        if self.isTrain:
+            for i in range(self.num_dofs):
+                name = self.dof_names[i]
+                found = False
+                for dof_name in self.cfg.control.stiffness.keys():
+                    if dof_name in name:
+                        if self.cfg.domain_rand.randomize_PD:
+                            self.p_gains[i] = self.cfg.control.stiffness[dof_name] * np.random.uniform(self.cfg.domain_rand.Kp_ratio_bias_range[0], self.cfg.domain_rand.Kp_ratio_bias_range[1])
+                            self.d_gains[i] = self.cfg.control.damping[dof_name] * np.random.uniform(self.cfg.domain_rand.Kd_ratio_bias_range[0], self.cfg.domain_rand.Kd_ratio_bias_range[1])
+                        else:
+                            self.p_gains[i] = self.cfg.control.damping[dof_name]
+                            self.d_gains[i] = self.cfg.control.damping[dof_name]
+                        found = True
+                if not found:
+                    self.p_gains[i] = 0.
+                    self.d_gains[i] = 0.
+                    if self.cfg.control.control_type in ["P", "V"]:
+                        print(f"PD gain of joint {name} were not defined, setting them to zero")
 
     def _reward_double_no_fly(self):
         contacts = self.contact_forces[:, self.feet_indices, 2] > 0.1
